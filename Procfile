@@ -1,1 +1,1 @@
-worker: python3 -m udemy
+worker: python3 -m udemypy
