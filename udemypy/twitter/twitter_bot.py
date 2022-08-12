@@ -1,25 +1,33 @@
-from tweepy import OAuthHandler, API
-from udemypy.twitter import data, messages
+from tweepy import API
+from tweepy import OAuthHandler
+from udemypy.twitter import settings
+from udemypy.twitter import messages
 
 
-def _connect() -> API:
-    auth = OAuthHandler(data.API_KEY, data.API_KEY_SECRET)
-    auth.set_access_token(data.ACCESS_TOKEN, data.ACCESS_TOKEN_SECRET)
+def connect() -> API:
+    auth = OAuthHandler(settings.API_KEY, settings.API_KEY_SECRET)
+    auth.set_access_token(settings.ACCESS_TOKEN, settings.ACCESS_TOKEN_SECRET)
     return API(auth)
 
 
-def _tweet_course(api, course) -> None:
+def tweet_course(
+    api,
+    course_link,
+    course_title,
+    course_rating,
+    course_students,
+    course_language,
+    course_discount_time_left,
+    badge,
+) -> None:
     api.update_status(
         status=messages.get_tweet(
-            course["title"], course["link"], course["rating"], course["students"]
+            course_title,
+            course_link,
+            course_rating,
+            course_students,
+            course_language,
+            course_discount_time_left,
+            badge,
         )
     )
-
-
-def send_courses(courses) -> None:
-    api = _connect()
-    for course in courses:
-        try:
-            _tweet_course(api, course)
-        except Exception as exception:
-            print(f"\n\nCould not tweet course: {course['title']}\nERROR: {exception}")
